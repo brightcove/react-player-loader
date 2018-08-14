@@ -1,0 +1,14 @@
+{
+  "generator-videojs-plugin": {
+    "scope": "",
+    "name": "test",
+    "description": "",
+    "author": "brandonocasey <brandonocasey@gmail.com>",
+    "license": "mit",
+    "pluginType": "advanced",
+    "css": false,
+    "docs": true,
+    "lang": false,
+    "husky": "lint"
+  }
+}
