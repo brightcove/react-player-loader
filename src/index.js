@@ -2,6 +2,27 @@ import React from 'react';
 import playerLoader from '@brightcove/player-loader';
 
 /**
+ * dispose an iframe or in-page player
+ *
+ * @param {Object|Element} player
+ *        The iframe element for the player or
+ *        the player instance.
+ */
+const disposePlayer = function(player) {
+
+  // cleanup in-page
+  if (player.dispose) {
+    player.dispose();
+  }
+
+  // cleanup iframe
+  if (player.parentNode) {
+    player.parentNode.removeChild(player);
+  }
+
+};
+
+/**
  * The official React component for the Brightcove
  * Player! This uses `@brightcove/player-loader` to load
  * a player into a React component based on the given props.
@@ -25,9 +46,15 @@ class ReactBrightcovePlayer extends React.Component {
 
   /**
    * Called just after the component has mounted on
-   * the DOM. Will only be called in the web browser.
+   * the DOM (right after `render()`).Will only be
+   * called in the web browser.
    */
   componentDidMount() {
+    this.setState({mounted: true});
+    // we have to make a copy of onSuccess and
+    // onFailure here, because we have to pass
+    // our own callbacks to player-loader
+    // to determine success/failure.
     const userSuccess = this.props.onSuccess;
     const userFailure = this.props.onFailure;
 
@@ -35,12 +62,22 @@ class ReactBrightcovePlayer extends React.Component {
       refNode: this.refNode.current,
       refNodeInsert: 'append',
       onSuccess: ({ref, type}) => {
+        // ignore success when not mounted
+        // and dispose the player
+        if (!this.state.mounted) {
+          disposePlayer(ref);
+          return;
+        }
         this.setState({player: ref});
         if (userSuccess) {
           userSuccess({ref, type});
         }
       },
       onFailure: (error) => {
+        // ignore errors when not mounted
+        if (!this.state.mounted) {
+          return;
+        }
         if (userFailure) {
           return userFailure(error);
         }
@@ -56,21 +93,14 @@ class ReactBrightcovePlayer extends React.Component {
    * Cleans up the player.
    */
   componentWillUnmount() {
+    this.setState({mounted: false});
+
     if (!this.state.player) {
       return;
     }
 
-    // cleanup in-page
-    if (this.state.player.dispose) {
-      this.state.player.dispose();
-    }
-
-    // cleanup iframe
-    if (this.state.player.parentNode) {
-      this.state.player.parentNode.removeChild(this.player);
-    }
-
-    this.state.player = null;
+    disposePlayer(this.state.player);
+    this.setState({player: null});
   }
 
   /**

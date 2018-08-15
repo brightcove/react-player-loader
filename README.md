@@ -15,11 +15,43 @@ npm install --save react-brightcove-player
 
 To include `react-brightcove-player` on your website or web application, use any of the following methods.
 
+### JSX
+
+1. Install the module (see [Installation](##Installation))
+2. `import` the module in your javascript. IE `import ReactBrightcovePlayer from 'react-brightcove-player'`
+3. Now you can use it however you like, with the `ReactBrightcovePlayer` variable.
+4. See the example below for full usage.
+
+> NOTE: React/ReactDOM/global are **NOT** required, they are only used to show a working example.
+
+```js
+import document from 'global/document';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactBrightcovePlayer from 'react-brightcove-player';
+
+let reactBrightcovePlayer;
+const onSuccess = function(success) {
+  // two ways to get the underlying player/iframe at this point.
+  console.log(success.ref)
+  console.log(reactBrightcovePlayer.state.player);
+};
+
+reactBrightcovePlayer = ReactDOM.render(
+  <ReactBrightcovePlayer accountId='1234678' onSuccess={onSuccess}/>,
+  document.getElementById('fixture')
+);
+
+```
+
 ### Via `<script>` Tags
 
-Get the script however you prefer. The `ReactBrightcovePlayer` component will be exported on the global `window` object. From there you can render it with `react` and `react-dom`, but those are not required to include the component on the page.
+1. Get the script however you prefer
+2. Include the script in your html
+3. Use the `ReactBrightcovePlayer` object that this module exports on the `window` object.
+4. See the example below for full usage.
 
-> NOTE: Again React/ReactDOM are **NOT** required, they are only used to show a working example.
+> NOTE: React/ReactDOM are **NOT** required, they are only used to show a working example.
 
 ```html
 <div id='fixture'></div>
@@ -49,7 +81,10 @@ Get the script however you prefer. The `ReactBrightcovePlayer` component will be
 
 ### CommonJS
 
-When using with Browserify/rollup/webpack, install via npm and `require` the plugin as you would any other module.
+1. Install the module (see [Installation](##Installation))
+2. `require` the module in your javascript. IE `var ReactBrightcovePlayer = require('react-brightcove-player')`
+3. Now you can use it however you like, with the `ReactBrightcovePlayer` variable.
+4. See the example below for full usage.
 
 > NOTE: React/ReactDOM/global are **NOT** required, they are only used to show a working example.
 
@@ -58,7 +93,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var document = require('global/document');
 var ReactBrightcovePlayer = require('react-brightcove-player');
-
 
 var reactBrightcovePlayer = ReactDOM.render(
   React.createElement(ReactBrightcovePlayer, {
@@ -76,7 +110,10 @@ var reactBrightcovePlayer = ReactDOM.render(
 
 ### ES Module
 
-When using with Browserify/rollup/webpack, install via npm and `import` the plugin as you would any other module.
+1. Install the module (see [Installation](##Installation))
+2. `import` the module in your javascript. IE `import ReactBrightcovePlayer from 'react-brightcove-player'`
+3. Now you can use it however you like, with the `ReactBrightcovePlayer` variable.
+4. See the example below for full usage.
 
 > NOTE: React/ReactDOM/global are **NOT** required, they are only used to show a working example.
 
@@ -99,33 +136,6 @@ const reactBrightcovePlayer = ReactDOM.render(
 );
 
 ```
-
-### JSX
-
-When using with Browserify/rollup/webpack, install via npm and `import` the plugin as you would any other module.
-
-> NOTE: React/ReactDOM/global are **NOT** required, they are only used to show a working example.
-
-```js
-import document from 'global/document';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactBrightcovePlayer  from 'react-brightcove-player';
-
-let reactBrightcovePlayer;
-const onSuccess = function(success) {
-  // two ways to get the underlying player/iframe at this point.
-  console.log(success.ref)
-  console.log(reactBrightcovePlayer.state.player);
-};
-
-reactBrightcovePlayer = ReactDOM.render(
-  <ReactBrightcovePlayer accountId='1234678' onSuccess={onSuccess}/>,
-  document.getElementById('fixture')
-);
-
-```
-
 
 ## Options
 See the [player loader page](https://github.com/brightcove/player-loader#parameters) for individual options. There are three caveats.
