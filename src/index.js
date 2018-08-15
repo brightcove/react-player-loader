@@ -34,13 +34,15 @@ class ReactBrightcovePlayer extends React.Component {
    *
    * @param {Object} props
    *        Most options will be passed along to player-loader, except for
-   *        options that are listed, and `refNode`/`refNodeInsert`
+   *        options that are listed. The exception is `refNode`/`refNodeInsert`
    *        which will be ignored, as they are used internally to
    *        get this component to work.
+   *
+   * @param {string} props.baseUrl
+   *        The baseUrl to use when requesting a player
    */
   constructor(props) {
     super(props);
-    this.state = {};
     this.refNode = React.createRef();
   }
 
@@ -50,7 +52,7 @@ class ReactBrightcovePlayer extends React.Component {
    * called in the web browser.
    */
   componentDidMount() {
-    this.setState({mounted: true});
+    this.mounted_ = true;
     // we have to make a copy of onSuccess and
     // onFailure here, because we have to pass
     // our own callbacks to player-loader
@@ -64,18 +66,18 @@ class ReactBrightcovePlayer extends React.Component {
       onSuccess: ({ref, type}) => {
         // ignore success when not mounted
         // and dispose the player
-        if (!this.state.mounted) {
+        if (!this.mounted_) {
           disposePlayer(ref);
           return;
         }
-        this.setState({player: ref});
+        this.player = ref;
         if (userSuccess) {
           userSuccess({ref, type});
         }
       },
       onFailure: (error) => {
         // ignore errors when not mounted
-        if (!this.state.mounted) {
+        if (!this.mounted_) {
           return;
         }
         if (userFailure) {
@@ -85,22 +87,34 @@ class ReactBrightcovePlayer extends React.Component {
       }
     });
 
+    const originalBaseUrl = playerLoader.getBaseUrl();
+
+    if (this.props.baseUrl) {
+      playerLoader.setBaseUrl(this.props.baseUrl);
+    }
+
     playerLoader(options);
+
+    playerLoader.setBaseUrl(originalBaseUrl);
   }
 
   /**
-   * Called when a component unmounts from the DOM.
+   * Called just before a component unmounts from the DOM.
    * Cleans up the player.
    */
   componentWillUnmount() {
-    this.setState({mounted: false});
-
-    if (!this.state.player) {
+    if (!this.mounted_) {
       return;
     }
 
-    disposePlayer(this.state.player);
-    this.setState({player: null});
+    this.mounted_ = false;
+
+    if (!this.player) {
+      return;
+    }
+
+    disposePlayer(this.player);
+    this.player = null;
   }
 
   /**

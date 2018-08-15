@@ -34,7 +34,7 @@ let reactBrightcovePlayer;
 const onSuccess = function(success) {
   // two ways to get the underlying player/iframe at this point.
   console.log(success.ref)
-  console.log(reactBrightcovePlayer.state.player);
+  console.log(reactBrightcovePlayer.player);
 };
 
 reactBrightcovePlayer = ReactDOM.render(
@@ -70,7 +70,7 @@ reactBrightcovePlayer = ReactDOM.render(
       onSuccess: function(success) {
         // two ways to get the underlying player/iframe at this point.
         console.log(success.ref)
-        console.log(reactBrightcovePlayer.state.player);
+        console.log(reactBrightcovePlayer.player);
       }
     }),
     document.getElementById('fixture')
@@ -100,7 +100,7 @@ var reactBrightcovePlayer = ReactDOM.render(
     onSuccess: function(success) {
       // two ways to get the underlying player/iframe at this point.
       console.log(success.ref)
-      console.log(reactBrightcovePlayer.state.player);
+      console.log(reactBrightcovePlayer.player);
     }
   }),
   document.getElementById('fixture')
@@ -129,7 +129,7 @@ const reactBrightcovePlayer = ReactDOM.render(
     onSuccess(success) {
       // two ways to get the underlying player/iframe at this point.
       console.log(success.ref)
-      console.log(reactBrightcovePlayer.state.player);
+      console.log(reactBrightcovePlayer.player);
     }
   }),
   document.getElementById('fixture')
@@ -138,18 +138,18 @@ const reactBrightcovePlayer = ReactDOM.render(
 ```
 
 ## Options
-See the [player loader page](https://github.com/brightcove/player-loader#parameters) for individual options. There are three caveats.
+See the [player loader page](https://github.com/brightcove/player-loader#parameters) for most options. There are four differences
 1. We cannot export the promise easily, so you will have to use the `onSuccess` and `onFailure` callbacks
 2. If you don't provide an `onFailure` callback the failure will be handle by throwing an error
-2. We need to use `refNode` and `refNodeInsert` internally, so those options will not be used if passed in.
+3. We need to use `refNode` and `refNodeInsert` internally, so those options will not be used if passed in.
+4. We allow a `baseUrl` string option, so that the baseUrl can be changed. Player loader makes you use `setBaseUrl()` which you won't have access to.
 
 ### View the Demo
 1. clone the repo
 2. move into the repo
 3. run `npm i`
-4. edit index.html and change `REPLACE_ME` for the `accountId` to something valid
-5. run `npm run start`
-6. Navigate to `http://localhost:9999` in the browser
+4. run `npm run start`
+5. Navigate to `http://localhost:9999` in the browser
 
 [react]: https://www.npmjs.com/package/react
 [react-dom]: https://www.npmjs.com/package/react-dom
