@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div id="fixture"></div>
+  <script src="node_modules/react/umd/react.development.js"></script>
+  <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
+  <script src="dist/react-brightcove-player.js"></script>
+  <script>
+    (function() {
+      var React = window.React;
+      var ReactDOM = window.ReactDOM;
+      var ReactBrightcovePlayer = window.ReactBrightcovePlayer;
+
+      var reactBrightcovePlayer = window.reactBrightcovePlayer = ReactDOM.render(
+        React.createElement(ReactBrightcovePlayer, {
+          accountId: '1',
+          baseUrl: window.location.origin + '/vendor/',
+          onSuccess: function(success) {
+            // two ways to get the underlying player/iframe at this point.
+            console.log(success.ref)
+            console.log(reactBrightcovePlayer.player);
+          }
+        }),
+        document.getElementById('fixture')
+      );
+    })();
+  </script>
+</body>
+</html>
