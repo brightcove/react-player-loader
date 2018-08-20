@@ -1,9 +1,9 @@
 {
-  "name": "react-brightcove-player",
+  "name": "@brightcove/react-player-loader",
   "version": "0.1.0",
   "description": "The official react component for the Brightcove Player",
-  "main": "dist/react-brightcove-player.cjs.js",
-  "module": "dist/react-brightcove-player.es.js",
+  "main": "dist/react-player-loader.cjs.js",
+  "module": "dist/react-player-loader.es.js",
   "generator-videojs-plugin": {
     "version": "6.1.4"
   },

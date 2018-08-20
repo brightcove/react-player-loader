@@ -27,7 +27,7 @@ const disposePlayer = function(player) {
  * Player! This uses `@brightcove/player-loader` to load
  * a player into a React component based on the given props.
  */
-class ReactBrightcovePlayer extends React.Component {
+class ReactPlayerLoader extends React.Component {
 
   /**
    * Create a new Brightcove player.
@@ -129,4 +129,4 @@ class ReactBrightcovePlayer extends React.Component {
 
 }
 
-export default ReactBrightcovePlayer;
+export default ReactPlayerLoader;
