@@ -60,7 +60,7 @@ reactPlayerLoader = ReactDOM.render(
 
 1. Get the script however you prefer
 2. Include the script in your html
-3. Use the `ReactPlayerLoader` object that this module exports on the `window` object.
+3. Use the `BrightcoveReactPlayerLoader` object that this module exports on the `window` object.
 4. See the example below for full usage.
 
 > NOTE: React/ReactDOM are **NOT** required, they are only used to show a working example.
@@ -69,12 +69,12 @@ reactPlayerLoader = ReactDOM.render(
 <div id='fixture'></div>
 <script src="//path/to/react.min.js"></script>
 <script src="//path/to/react-dom.min.js"></script>
-<script src="//path/to/react-player-loader.min.js"></script>
+<script src="//path/to/brightcove-react-player-loader.min.js"></script>
 <script>
 
   var React = window.React;
   var ReactDOM = window.ReactDOM;
-  var ReactPlayerLoader = window.ReactPlayerLoader;
+  var ReactPlayerLoader = window.BrightcoveReactPlayerLoader;
 
   var reactPlayerLoader = window.reactPlayerLoader = ReactDOM.render(
     React.createElement(ReactPlayerLoader, {
