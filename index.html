@@ -7,21 +7,21 @@
   <div id="fixture"></div>
   <script src="node_modules/react/umd/react.development.js"></script>
   <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
-  <script src="dist/react-brightcove-player.js"></script>
+  <script src="dist/brightcove-react-player-loader.js"></script>
   <script>
     (function() {
       var React = window.React;
       var ReactDOM = window.ReactDOM;
-      var ReactBrightcovePlayer = window.ReactBrightcovePlayer;
+      var ReactPlayerLoader = window.BrightcoveReactPlayerLoader;
 
-      var reactBrightcovePlayer = window.reactBrightcovePlayer = ReactDOM.render(
-        React.createElement(ReactBrightcovePlayer, {
+      var reactPlayerLoader = window.reactPlayerLoader = ReactDOM.render(
+        React.createElement(ReactPlayerLoader, {
           accountId: '1',
           baseUrl: window.location.origin + '/vendor/',
           onSuccess: function(success) {
             // two ways to get the underlying player/iframe at this point.
             console.log(success.ref)
-            console.log(reactBrightcovePlayer.player);
+            console.log(reactPlayerLoader.player);
           }
         }),
         document.getElementById('fixture')

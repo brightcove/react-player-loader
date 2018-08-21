@@ -3,10 +3,10 @@ import window from 'global/window';
 import QUnit from 'qunit';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactBrightcovePlayer from '../src/index.js';
+import ReactPlayerLoader from '../src/index.js';
 import BrightcovePlayerLoader from '@brightcove/player-loader';
 
-QUnit.module('ReactBrightcovePlayer', {
+QUnit.module('ReactPlayerLoader', {
   beforeEach() {
     this.fixture = document.getElementById('qunit-fixture');
     this.originalBaseUrl = BrightcovePlayerLoader.getBaseUrl();
@@ -26,8 +26,8 @@ QUnit.test('failure', function(assert) {
 
   assert.expect(2);
 
-  const reactBrightcovePlayer = ReactDOM.render(
-    React.createElement(ReactBrightcovePlayer, {
+  const reactPlayerLoader = ReactDOM.render(
+    React.createElement(ReactPlayerLoader, {
       accountId: '2',
       onFailure: (failure) => {
         assert.ok(failure, 'failed to download non-existent player');
@@ -37,7 +37,7 @@ QUnit.test('failure', function(assert) {
     this.fixture
   );
 
-  assert.ok(reactBrightcovePlayer, 'player loader react component created');
+  assert.ok(reactPlayerLoader, 'player loader react component created');
 });
 
 QUnit.test('success', function(assert) {
@@ -45,8 +45,8 @@ QUnit.test('success', function(assert) {
 
   assert.expect(2);
 
-  const reactBrightcovePlayer = ReactDOM.render(
-    React.createElement(ReactBrightcovePlayer, {
+  const reactPlayerLoader = ReactDOM.render(
+    React.createElement(ReactPlayerLoader, {
       accountId: '1',
       onSuccess: ({ref, type}) => {
         assert.ok(ref, 'downloaded and created a player');
@@ -56,7 +56,7 @@ QUnit.test('success', function(assert) {
     this.fixture
   );
 
-  assert.ok(reactBrightcovePlayer, 'player loader react component created');
+  assert.ok(reactPlayerLoader, 'player loader react component created');
 });
 
 QUnit.test('unmount after success', function(assert) {
@@ -64,8 +64,8 @@ QUnit.test('unmount after success', function(assert) {
 
   assert.expect(2);
 
-  const reactBrightcovePlayer = ReactDOM.render(
-    React.createElement(ReactBrightcovePlayer, {
+  const reactPlayerLoader = ReactDOM.render(
+    React.createElement(ReactPlayerLoader, {
       accountId: '1',
       onSuccess: ({ref, type}) => {
         assert.ok(ref, 'downloaded and created a player');
@@ -78,5 +78,5 @@ QUnit.test('unmount after success', function(assert) {
     this.fixture
   );
 
-  assert.ok(reactBrightcovePlayer, 'player loader react component created');
+  assert.ok(reactPlayerLoader, 'player loader react component created');
 });

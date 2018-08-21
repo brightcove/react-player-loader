@@ -45,8 +45,8 @@ const primedPlugins = {
 };
 
 /* General Globals */
-const moduleName = 'ReactBrightcovePlayer';
-const pluginName = 'react-brightcove-player';
+const moduleName = 'BrightcoveReactPlayerLoader';
+const pluginName = 'brightcove-react-player-loader';
 
 // globals, aka replace require calls with this
 const globals = {
