@@ -1,11 +1,14 @@
 # @brightcove/react-player-loader
-A React component to load a brightcove player in the browser.
+A React component to load a Brightcove Player in the browser.
+
+## Brightcove Player Support
+Currently, this library supports Brightcove Players v6.11.0 and higher.
 
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Installation
+- [Installation](#installation)
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -17,6 +20,7 @@ A React component to load a brightcove player in the browser.
   - [View the Demo](#view-the-demo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Installation
 
 ```sh
@@ -150,7 +154,7 @@ const reactPlayerLoader = ReactDOM.render(
 ```
 
 ## Options
-See the [player loader page](https://github.com/brightcove/player-loader#parameters) for most options. There are four differences
+See the [Player Loader page](https://github.com/brightcove/player-loader#parameters) for most options. There are four differences
 1. We cannot export the promise easily, so you will have to use the `onSuccess` and `onFailure` callbacks
 2. If you don't provide an `onFailure` callback the failure will be handle by throwing an error
 3. We need to use `refNode` and `refNodeInsert` internally, so those options will not be used if passed in.
