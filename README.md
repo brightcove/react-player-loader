@@ -1,4 +1,7 @@
 # @brightcove/react-player-loader
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/react-player-loader.svg)](https://greenkeeper.io/)
+
 A React component to load a Brightcove Player in the browser.
 
 ## Brightcove Player Support
