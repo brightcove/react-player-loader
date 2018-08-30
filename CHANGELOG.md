@@ -1,3 +1,10 @@
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/brightcove/react-player-loader/compare/v1.0.0...v1.0.1) (2018-08-30)
+
+### Bug Fixes
+
+* Do not bundle React with the module builds and update tooling using the plugin generator v7.2.0 (#5) ([904885a](https://github.com/brightcove/react-player-loader/commit/904885a)), closes [#5](https://github.com/brightcove/react-player-loader/issues/5)
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/brightcove/react-player-loader/compare/v0.2.0...v1.0.0) (2018-08-28)
 
