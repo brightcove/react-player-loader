@@ -1,6 +1,9 @@
 # @brightcove/react-player-loader
 
+[![Build Status](https://travis-ci.org/brightcove/react-player-loader.svg?branch=master)](https://travis-ci.org/brightcove/react-player-loader)
 [![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/react-player-loader.svg)](https://greenkeeper.io/)
+
+[![NPM](https://nodei.co/npm/@brightcove/react-player-loader.png?downloads=true&downloadRank=true)](https://nodei.co/npm/@brightcove/react-player-loader/)
 
 A React component to load a Brightcove Player in the browser.
 
