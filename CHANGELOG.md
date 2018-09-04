@@ -1,3 +1,14 @@
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/brightcove/react-player-loader/compare/v1.0.1...v1.0.2) (2018-09-04)
+
+### Bug Fixes
+
+* Fix an issue where the dist files for this package included some unexpected ES6 code. (#9) ([e6cb690](https://github.com/brightcove/react-player-loader/commit/e6cb690)), closes [#9](https://github.com/brightcove/react-player-loader/issues/9)
+
+### Chores
+
+* **package:** Update dependencies to enable Greenkeeper 🌴 (#6) ([494e94e](https://github.com/brightcove/react-player-loader/commit/494e94e)), closes [#6](https://github.com/brightcove/react-player-loader/issues/6)
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/brightcove/react-player-loader/compare/v1.0.0...v1.0.1) (2018-08-30)
 
