@@ -1,3 +1,10 @@
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/brightcove/react-player-loader/compare/v1.0.2...v1.0.3) (2018-09-05)
+
+### Bug Fixes
+
+* Remove the postinstall script to prevent install issues (#11) ([c9f4b50](https://github.com/brightcove/react-player-loader/commit/c9f4b50)), closes [#11](https://github.com/brightcove/react-player-loader/issues/11)
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/brightcove/react-player-loader/compare/v1.0.1...v1.0.2) (2018-09-04)
 
