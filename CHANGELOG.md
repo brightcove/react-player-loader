@@ -1,3 +1,10 @@
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/brightcove/react-player-loader/compare/v1.0.3...v1.0.4) (2018-09-05)
+
+### Chores
+
+* **package:** Update [@brightcove](https://github.com/brightcove)/player-loader to fix install issues (#12) ([b19d5cf](https://github.com/brightcove/react-player-loader/commit/b19d5cf)), closes [#12](https://github.com/brightcove/react-player-loader/issues/12)
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/brightcove/react-player-loader/compare/v1.0.2...v1.0.3) (2018-09-05)
 
