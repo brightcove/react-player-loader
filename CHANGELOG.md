@@ -1,3 +1,15 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/brightcove/react-player-loader/compare/v1.0.4...v1.1.0) (2018-09-12)
+
+### Features
+
+* Use ref callback to add support for React 15 (#15) ([2c0161b](https://github.com/brightcove/react-player-loader/commit/2c0161b)), closes [#15](https://github.com/brightcove/react-player-loader/issues/15)
+
+### Chores
+
+* **package:** Update [@brightcove](https://github.com/brightcove)/player-loader to 1.4.1 (#16) ([7fb309d](https://github.com/brightcove/react-player-loader/commit/7fb309d)), closes [#16](https://github.com/brightcove/react-player-loader/issues/16)
+* **package:** update videojs-generate-rollup-config to version 2.2.0 (#13) ([abcbe8a](https://github.com/brightcove/react-player-loader/commit/abcbe8a)), closes [#13](https://github.com/brightcove/react-player-loader/issues/13)
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/brightcove/react-player-loader/compare/v1.0.3...v1.0.4) (2018-09-05)
 
