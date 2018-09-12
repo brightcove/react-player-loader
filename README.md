@@ -5,6 +5,8 @@
 
 [![NPM](https://nodei.co/npm/@brightcove/react-player-loader.png?downloads=true&downloadRank=true)](https://nodei.co/npm/@brightcove/react-player-loader/)
 
+[![NPM](https://nodeico.herokuapp.com/@brightcove/react-player-loader.svg)](https://npmjs.com/package/@brightcove/react-player-loader)
+
 A React component to load a Brightcove Player in the browser.
 
 ## Brightcove Player Support
