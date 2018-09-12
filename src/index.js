@@ -43,7 +43,10 @@ class ReactPlayerLoader extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.refNode = React.createRef();
+    this.refNode = null;
+    this.setRefNode = ref => {
+      this.refNode = ref;
+    };
   }
 
   /**
@@ -61,7 +64,7 @@ class ReactPlayerLoader extends React.Component {
     const userFailure = this.props.onFailure;
 
     const options = Object.assign({}, this.props, {
-      refNode: this.refNode.current,
+      refNode: this.refNode,
       refNodeInsert: 'append',
       onSuccess: ({ref, type}) => {
         // ignore success when not mounted
@@ -124,7 +127,7 @@ class ReactPlayerLoader extends React.Component {
    *          The react element to render
    */
   render() {
-    return React.createElement('div', {ref: this.refNode});
+    return React.createElement('div', {ref: this.setRefNode});
   }
 
 }
