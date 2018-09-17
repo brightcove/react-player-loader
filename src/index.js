@@ -74,6 +74,12 @@ class ReactPlayerLoader extends React.Component {
           return;
         }
         this.player = ref;
+
+        // Add a REACT_PLAYER_LOADER property to bcinfo to indicate this player
+        // was loaded via that mechanism.
+        if (ref.bcinfo) {
+          ref.bcinfo.REACT_PLAYER_LOADER = true;
+        }
         if (userSuccess) {
           userSuccess({ref, type});
         }
