@@ -1,3 +1,10 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/brightcove/react-player-loader/compare/v1.1.0...v1.1.1) (2018-09-17)
+
+### Chores
+
+* Mark players as having been loaded with this library. (#18) ([8396842](https://github.com/brightcove/react-player-loader/commit/8396842)), closes [#18](https://github.com/brightcove/react-player-loader/issues/18)
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/brightcove/react-player-loader/compare/v1.0.4...v1.1.0) (2018-09-12)
 
