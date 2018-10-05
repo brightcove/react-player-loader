@@ -1,3 +1,11 @@
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/brightcove/react-player-loader/compare/v1.1.1...v1.1.2) (2018-10-05)
+
+### Chores
+
+* **package:** update all package versions ([ef58cde](https://github.com/brightcove/react-player-loader/commit/ef58cde))
+* **package:** update videojs-standard to version 8.0.2 (#20) ([5d753b1](https://github.com/brightcove/react-player-loader/commit/5d753b1)), closes [#20](https://github.com/brightcove/react-player-loader/issues/20)
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/brightcove/react-player-loader/compare/v1.1.0...v1.1.1) (2018-09-17)
 
