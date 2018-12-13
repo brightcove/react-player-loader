@@ -1,3 +1,14 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/brightcove/react-player-loader/compare/v1.1.2...v1.2.0) (2018-12-13)
+
+### Features
+
+* Add support for attrs prop to customize component element ([#29](https://github.com/brightcove/react-player-loader/issues/29)) ([b1abf92](https://github.com/brightcove/react-player-loader/commit/b1abf92))
+
+### Chores
+
+* **package:** update dependencies ([#28](https://github.com/brightcove/react-player-loader/issues/28)) ([5250042](https://github.com/brightcove/react-player-loader/commit/5250042))
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/brightcove/react-player-loader/compare/v1.1.1...v1.1.2) (2018-10-05)
 
