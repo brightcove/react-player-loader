@@ -80,3 +80,26 @@ QUnit.test('unmount after success', function(assert) {
 
   assert.ok(reactPlayerLoader, 'player loader react component created');
 });
+
+QUnit.test('attrs', function(assert) {
+  const done = assert.async();
+
+  assert.expect(1);
+
+  ReactDOM.render(
+    React.createElement(ReactPlayerLoader, {
+      accountId: '1',
+      attrs: {foo: 'bar'},
+      onSuccess: ({ref, type}) => {
+        window.setTimeout(() => {
+          ReactDOM.unmountComponentAtNode(this.fixture);
+          done();
+        }, 1);
+      }
+    }),
+    this.fixture
+  );
+
+  assert.ok(this.fixture.querySelector('div[foo="bar"]'), 'foo="bar" div exists');
+});
+

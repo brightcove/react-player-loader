@@ -8,7 +8,7 @@
 A React component to load a Brightcove Player in the browser.
 
 ## Brightcove Player Support
-Currently, this library supports Brightcove Players v6.11.0 and higher.
+This library has [the same support characteristics as the Brightcove Player Loader](https://github.com/brightcove/player-loader#brightcove-player-support).
 
 ## Table of Contents
 
@@ -22,8 +22,11 @@ Currently, this library supports Brightcove Players v6.11.0 and higher.
   - [Via `<script>` Tags](#via-script-tags)
   - [CommonJS](#commonjs)
   - [ES Module](#es-module)
-- [Options](#options)
-  - [View the Demo](#view-the-demo)
+- [Props](#props)
+  - [`attrs`](#attrs)
+  - [`baseUrl`](#baseurl)
+  - [Other Props](#other-props)
+- [View the Demo](#view-the-demo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -76,7 +79,7 @@ reactPlayerLoader = ReactDOM.render(
 > NOTE: React/ReactDOM are **NOT** required, they are only used to show a working example.
 
 ```html
-<div id='fixture'></div>
+<div id="fixture"></div>
 <script src="//path/to/react.min.js"></script>
 <script src="//path/to/react-dom.min.js"></script>
 <script src="//path/to/brightcove-react-player-loader.min.js"></script>
@@ -159,19 +162,42 @@ const reactPlayerLoader = ReactDOM.render(
 
 ```
 
-## Options
-See the [Player Loader page](https://github.com/brightcove/player-loader#parameters) for most options. There are four differences
-1. We cannot export the promise easily, so you will have to use the `onSuccess` and `onFailure` callbacks
-2. If you don't provide an `onFailure` callback the failure will be handle by throwing an error
-3. We need to use `refNode` and `refNodeInsert` internally, so those options will not be used if passed in.
-4. We allow a `baseUrl` string option, so that the baseUrl can be changed. Player loader makes you use `setBaseUrl()` which you won't have access to.
+## Props
 
-### View the Demo
-1. clone the repo
-2. move into the repo
-3. run `npm i`
-4. run `npm run start`
-5. Navigate to `http://localhost:9999` in the browser
+### `attrs`
+Type: `Object`
+
+Provides attributes (props) to the component element.
+
+For example, you may want to customize the `className` of the component (by default, `"brightcove-react-player-loader"`) by setting props on the component like so:
+
+```jsx
+<ReactPlayerLoader attrs={{className: 'my-custom-class'}} />
+```
+
+### `baseUrl`
+Type: `string`
+
+Used to override the base URL for the Brightcove Player being embedded.
+
+Most users will never need this prop. By default, players are loaded from Brightcove's player CDN (`players.brightcove.net`).
+
+### Other Props
+All props not specified above are passed to the [Brightcove Player Loader](https://github.com/brightcove/player-loader#parameters) with a few differences:
+
+1. We cannot expose the promise easily, so you will have to use the `onSuccess` and `onFailure` callbacks.
+2. If you don't provide an `onFailure` callback, the failure will be handled by throwing an error.
+3. We need to use `refNode` and `refNodeInsert` internally, so those options will not be used if passed in.
+
+## View the Demo
+This repository includes a barebones demo/example page.
+
+1. Clone the repository
+2. Move into the repository
+3. Run `npm install`
+4. Run `npm start`
+5. Navigate to `http://localhost:9999` in a browser
+
 
 [react]: https://www.npmjs.com/package/react
 [react-dom]: https://www.npmjs.com/package/react-dom
