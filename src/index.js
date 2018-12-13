@@ -38,8 +38,12 @@ class ReactPlayerLoader extends React.Component {
    *        which will be ignored, as they are used internally to
    *        get this component to work.
    *
-   * @param {string} props.baseUrl
-   *        The baseUrl to use when requesting a player
+   * @param {string} [props.baseUrl]
+   *        The base URL to use when requesting a player
+   *
+   * @param {Object} [props.attrs]
+   *        Used to set attributes on the component element that contains the
+   *        embedded Brightcove Player.
    */
   constructor(props) {
     super(props);
@@ -96,6 +100,10 @@ class ReactPlayerLoader extends React.Component {
       }
     });
 
+    // Delete props that are not meant to be passed to player-loader.
+    delete options.attrs;
+    delete options.baseUrl;
+
     const originalBaseUrl = playerLoader.getBaseUrl();
 
     if (this.props.baseUrl) {
@@ -133,7 +141,13 @@ class ReactPlayerLoader extends React.Component {
    *          The react element to render
    */
   render() {
-    return React.createElement('div', {ref: this.setRefNode});
+    const props = Object.assign(
+      {className: 'brightcove-react-player-loader'},
+      this.props.attrs,
+      {ref: this.setRefNode}
+    );
+
+    return React.createElement('div', props);
   }
 
 }
