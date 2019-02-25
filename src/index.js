@@ -10,11 +10,6 @@ import playerLoader from '@brightcove/player-loader';
  */
 const disposePlayer = function(player) {
 
-  // cleanup in-page
-  if (player.dispose) {
-    player.dispose();
-  }
-
   // cleanup iframe
   if (player.parentNode) {
     player.parentNode.removeChild(player);
