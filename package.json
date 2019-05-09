@@ -67,12 +67,14 @@
     "src/",
     "test/"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@brightcove/player-loader": "^1.6.0"
+  },
   "devDependencies": {
-    "@brightcove/player-loader": "^1.6.0",
     "conventional-changelog-cli": "^2.0.11",
     "conventional-changelog-videojs": "^3.0.0",
     "doctoc": "^1.4.0",
+    "global": "^4.3.2",
     "husky": "^1.2.0",
     "in-publish": "^2.0.0",
     "jsdoc": "https://github.com/BrandonOCasey/jsdoc#feat/plugin-from-cli",
