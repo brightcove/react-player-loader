@@ -73,7 +73,7 @@
     "conventional-changelog-cli": "^2.0.11",
     "conventional-changelog-videojs": "^3.0.0",
     "doctoc": "^1.4.0",
-    "husky": "^1.2.0",
+    "husky": "^2.3.0",
     "in-publish": "^2.0.0",
     "jsdoc": "https://github.com/BrandonOCasey/jsdoc#feat/plugin-from-cli",
     "karma": "^3.1.3",
