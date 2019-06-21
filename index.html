@@ -12,20 +12,19 @@
     (function() {
       var React = window.React;
       var ReactDOM = window.ReactDOM;
-      var ReactPlayerLoader = window.BrightcoveReactPlayerLoader;
 
-      var reactPlayerLoader = window.reactPlayerLoader = ReactDOM.render(
-        React.createElement(ReactPlayerLoader, {
+      window.reactPlayerLoader = ReactDOM.render(
+        React.createElement(window.BrightcoveReactPlayerLoader, {
           accountId: '1',
-          baseUrl: window.location.origin + '/vendor/',
-          onSuccess: function(success) {
-            // two ways to get the underlying player/iframe at this point.
-            console.log(success.ref)
-            console.log(reactPlayerLoader.player);
-          }
+          videoId: '2',
+          baseUrl: window.location.origin + '/vendor/'
         }),
         document.getElementById('fixture')
       );
+
+      if (console) {
+        console.log('the component instance is available as window.reactPlayerLoader');
+      }
     })();
   </script>
 </body>

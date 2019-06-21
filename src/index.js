@@ -2,30 +2,25 @@ import React from 'react';
 import playerLoader from '@brightcove/player-loader';
 
 /**
- * dispose an iframe or in-page player
+ * These prop changes can be handled by an internal player state change rather
+ * than a full reload.
  *
- * @param {Object|Element} player
- *        The iframe element for the player or
- *        the player instance.
+ * @private
+ * @type {Object}
  */
-const disposePlayer = function(player) {
-
-  // cleanup in-page
-  if (player.dispose) {
-    player.dispose();
-  }
-
-  // cleanup iframe
-  if (player.parentNode) {
-    player.parentNode.removeChild(player);
-  }
-
-};
+const NO_RELOAD_PROPS = [
+  'catalogSearch',
+  'catalogSequence',
+  'playlistId',
+  'playlistVideoId',
+  'videoId'
+];
 
 /**
- * The official React component for the Brightcove
- * Player! This uses `@brightcove/player-loader` to load
- * a player into a React component based on the given props.
+ * The official React component for the Brightcove Player!
+ *
+ * This uses `@brightcove/player-loader` to load a player into a React
+ * component based on the given props.
  */
 class ReactPlayerLoader extends React.Component {
 
@@ -34,9 +29,7 @@ class ReactPlayerLoader extends React.Component {
    *
    * @param {Object} props
    *        Most options will be passed along to player-loader, except for
-   *        options that are listed. The exception is `refNode`/`refNodeInsert`
-   *        which will be ignored, as they are used internally to
-   *        get this component to work.
+   *        options that are listed. See README.md for more detail.
    *
    * @param {string} [props.baseUrl]
    *        The base URL to use when requesting a player
@@ -54,16 +47,16 @@ class ReactPlayerLoader extends React.Component {
   }
 
   /**
-   * Called just after the component has mounted on
-   * the DOM (right after `render()`).Will only be
-   * called in the web browser.
+   * Loads a new player based on the current props.
    */
-  componentDidMount() {
-    this.mounted_ = true;
-    // we have to make a copy of onSuccess and
-    // onFailure here, because we have to pass
-    // our own callbacks to player-loader
-    // to determine success/failure.
+  loadPlayer() {
+
+    // If there is any player currently loaded, dispose it before fetching a
+    // new one.
+    this.disposePlayer();
+
+    // We need to provide our own callbacks below, so we cache these
+    // user-provided callbacks for use later.
     const userSuccess = this.props.onSuccess;
     const userFailure = this.props.onFailure;
 
@@ -71,31 +64,48 @@ class ReactPlayerLoader extends React.Component {
       refNode: this.refNode,
       refNodeInsert: 'append',
       onSuccess: ({ref, type}) => {
-        // ignore success when not mounted
-        // and dispose the player
-        if (!this.mounted_) {
-          disposePlayer(ref);
+
+        // If the component is not mounted when the callback fires, dispose
+        // the player and bail out.
+        if (!this.isMounted_) {
+          this.disposePlayer(ref);
           return;
         }
+
+        // Store a player reference on the component.
         this.player = ref;
+
+        // Null out the player reference when the player is disposed from
+        // outside the component.
+        ref.on('dispose', () => {
+          this.player = null;
+        });
 
         // Add a REACT_PLAYER_LOADER property to bcinfo to indicate this player
         // was loaded via that mechanism.
         if (ref.bcinfo) {
           ref.bcinfo.REACT_PLAYER_LOADER = true;
         }
-        if (userSuccess) {
+
+        // Call a user-provided onSuccess callback.
+        if (typeof userSuccess === 'function') {
           userSuccess({ref, type});
         }
       },
       onFailure: (error) => {
-        // ignore errors when not mounted
-        if (!this.mounted_) {
+
+        // Ignore errors when not mounted.
+        if (!this.isMounted_) {
           return;
         }
-        if (userFailure) {
-          return userFailure(error);
+
+        // Call a user-provided onFailure callback.
+        if (typeof userFailure === 'function') {
+          userFailure(error);
+          return;
         }
+
+        // Fall back to throwing an error;
         throw new Error(error);
       }
     });
@@ -104,6 +114,9 @@ class ReactPlayerLoader extends React.Component {
     delete options.attrs;
     delete options.baseUrl;
 
+    // If a base URL is provided, it should only apply to this player load.
+    // This means we need to back up the original base URL and restore it
+    // _after_ we call player loader.
     const originalBaseUrl = playerLoader.getBaseUrl();
 
     if (this.props.baseUrl) {
@@ -111,34 +124,185 @@ class ReactPlayerLoader extends React.Component {
     }
 
     playerLoader(options);
-
     playerLoader.setBaseUrl(originalBaseUrl);
   }
 
   /**
-   * Called just before a component unmounts from the DOM.
-   * Cleans up the player.
+   * Disposes the current player, if there is one.
    */
-  componentWillUnmount() {
-    if (!this.mounted_) {
-      return;
-    }
+  disposePlayer() {
 
-    this.mounted_ = false;
-
+    // Nothing to dispose.
     if (!this.player) {
       return;
     }
 
-    disposePlayer(this.player);
+    // Dispose an in-page player.
+    if (this.player.dispose) {
+      this.player.dispose();
+
+    // Dispose an iframe player.
+    } else if (this.player.parentNode) {
+      this.player.parentNode.removeChild(this.player);
+    }
+
+    // Null out the player reference.
     this.player = null;
   }
 
   /**
-   * Renders the player
+   * Update the player based on changes to certain props that do not require
+   * a full player reload.
+   *
+   * @param {Object} changes
+   *        An object. The keys of this object are the props that changed and
+   *        the values are the previous values.
+   */
+  updatePlayer(changes) {
+
+    // Nothing to do.
+    if (!this.player) {
+      return;
+    }
+
+    // Bail out if this player is not using the Video Cloud catalog plugin.
+    if (!this.player.usingPlugin('catalog')) {
+      return;
+    }
+
+    // There is a new catalog sequence request. This takes precedence over
+    // other catalog updates because it is a different call.
+    if (changes.catalogSequence && this.props.catalogSequence) {
+      this.player.catalog.getLazySequence(this.props.catalogSequence, (err, data) => {
+        if (err) {
+          /* eslint-disable no-console */
+          if (console && console.error) {
+            console.error(err);
+          }
+          /* eslint-enable no-console */
+        }
+        this.player.catalog.load(data);
+      }, this.props.adConfigId);
+      return;
+    }
+
+    let catalogParams;
+
+    if (changes.videoId && this.props.videoId) {
+      catalogParams = {
+        type: 'video',
+        id: this.props.videoId
+      };
+    } else if (changes.playlistId && this.props.playlistId) {
+      catalogParams = {
+        type: 'playlist',
+        id: this.props.playlistId
+      };
+    } else if (changes.catalogSearch && this.props.catalogSearch) {
+      catalogParams = {
+        type: 'search',
+        q: this.props.catalogSearch
+      };
+    }
+
+    if (catalogParams) {
+      if (this.props.adConfigId) {
+        catalogParams.adConfigId = this.props.adConfigId;
+      }
+
+      if (this.props.deliveryConfigId) {
+        catalogParams.deliveryConfigId = this.props.deliveryConfigId;
+      }
+
+      this.player.catalog.get(catalogParams).then((data) => {
+
+        // If the playlistVideoId changed and this is a playlist, we need
+        // to search through the playlist items to find the correct
+        // starting index.
+        if (
+          catalogParams.type === 'playlist' &&
+          changes.playlistVideoId &&
+          this.props.playlistVideoId &&
+          Array.isArray(data)
+        ) {
+          for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+
+            if (
+              item.id === this.props.playlistVideoId ||
+              `ref:${item.referenceId}` === this.props.playlistVideoId
+            ) {
+              data.startingIndex = i;
+              break;
+            }
+          }
+        }
+
+        this.player.catalog.load(data);
+      }, (err) => {
+        /* eslint-disable no-console */
+        if (console && console.error) {
+          console.error(err);
+        }
+        /* eslint-enable no-console */
+      });
+    }
+  }
+
+  /**
+   * Called just after the component has mounted.
+   */
+  componentDidMount() {
+    this.isMounted_ = true;
+    this.loadPlayer();
+  }
+
+  /**
+   * Called when the component props are updated.
+   *
+   * Some prop changes may trigger special behavior (see `propChangeHandlers`),
+   * but if ANY prop is changed that is NOT handled, the player will be
+   * reloaded entirely.
+   *
+   * @param  {Object} prevProps
+   *         The previous props state before change.
+   */
+  componentDidUpdate(prevProps) {
+
+    // Calculate the prop changes.
+    const changes = Object.keys(prevProps).reduce((acc, key) => {
+      const previous = prevProps[key];
+      const current = this.props[key];
+
+      if (current !== previous) {
+        acc[key] = previous;
+      }
+
+      return acc;
+    }, {});
+
+    // If any changed keys cannot be handled without a reload, perform a reload.
+    if (Object.keys(changes).some(k => NO_RELOAD_PROPS.indexOf(k) === -1)) {
+      this.loadPlayer();
+      return;
+    }
+
+    this.updatePlayer(changes);
+  }
+
+  /**
+   * Called just before a component unmounts. Disposes the player.
+   */
+  componentWillUnmount() {
+    this.isMounted_ = false;
+    this.disposePlayer();
+  }
+
+  /**
+   * Renders the component.
    *
    * @return {ReactElement}
-   *          The react element to render
+   *          The react element to render.
    */
   render() {
     const props = Object.assign(
@@ -149,7 +313,6 @@ class ReactPlayerLoader extends React.Component {
 
     return React.createElement('div', props);
   }
-
 }
 
 export default ReactPlayerLoader;
