@@ -85,9 +85,11 @@ class ReactPlayerLoader extends React.Component {
 
         // Null out the player reference when the player is disposed from
         // outside the component.
-        ref.on('dispose', () => {
-          this.player = null;
-        });
+        if (type === 'in-page') {
+          ref.on('dispose', () => {
+            this.player = null;
+          });
+        }
 
         // Add a REACT_PLAYER_LOADER property to bcinfo to indicate this player
         // was loaded via that mechanism.
