@@ -8,13 +8,21 @@ import playerLoader from '@brightcove/player-loader';
  * @private
  * @type {Object}
  */
-const NO_RELOAD_PROPS = [
+const UPDATEABLE_PROPS = [
   'catalogSearch',
   'catalogSequence',
   'playlistId',
   'playlistVideoId',
   'videoId'
 ];
+
+const logError = (err) => {
+  /* eslint-disable no-console */
+  if (err && console && console.error) {
+    console.error(err);
+  }
+  /* eslint-enable no-console */
+};
 
 /**
  * The official React component for the Brightcove Player!
@@ -155,54 +163,80 @@ class ReactPlayerLoader extends React.Component {
    * a full player reload.
    *
    * @param {Object} changes
-   *        An object. The keys of this object are the props that changed and
-   *        the values are the previous values.
+   *        An object. The keys of this object are the props that changed.
    */
   updatePlayer(changes) {
 
-    // Nothing to do.
-    if (!this.player) {
+    // No player exists or player is disposed.
+    if (!this.player || !this.player.el()) {
       return;
     }
 
-    // Bail out if this player is not using the Video Cloud catalog plugin.
-    if (!this.player.usingPlugin('catalog')) {
-      return;
-    }
+    const findPlaylistItemIndex = (items) => {
+      if (Array.isArray(items) && this.props.playlistVideoId) {
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
 
-    // There is a new catalog sequence request. This takes precedence over
-    // other catalog updates because it is a different call.
-    if (changes.catalogSequence && this.props.catalogSequence) {
-      this.player.catalog.getLazySequence(this.props.catalogSequence, (err, data) => {
-        if (err) {
-          /* eslint-disable no-console */
-          if (console && console.error) {
-            console.error(err);
+          if (
+            item.id === this.props.playlistVideoId ||
+            `ref:${item.referenceId}` === this.props.playlistVideoId
+          ) {
+            return i;
           }
-          /* eslint-enable no-console */
         }
+      }
+      return -1;
+    };
+
+    const catalogCallback = (requestType) => {
+      return (err, data) => {
+        if (err) {
+          logError(err);
+          return;
+        }
+
+        // If the playlistVideoId changed and this is a playlist request, we
+        // need to search through the playlist items to find the correct
+        // starting index.
+        if (requestType === 'playlist' && changes.playlistVideoId) {
+          const i = findPlaylistItemIndex(data);
+
+          if (i > -1) {
+            data.startingIndex = i;
+          }
+        }
+
         this.player.catalog.load(data);
-      }, this.props.adConfigId);
-      return;
-    }
+      };
+    };
 
     let catalogParams;
 
-    if (changes.videoId && this.props.videoId) {
-      catalogParams = {
-        type: 'video',
-        id: this.props.videoId
-      };
-    } else if (changes.playlistId && this.props.playlistId) {
-      catalogParams = {
-        type: 'playlist',
-        id: this.props.playlistId
-      };
-    } else if (changes.catalogSearch && this.props.catalogSearch) {
-      catalogParams = {
-        type: 'search',
-        q: this.props.catalogSearch
-      };
+    if (this.player.usingPlugin('catalog')) {
+
+      // There is a new catalog sequence request. This takes precedence over
+      // other catalog updates because it is a different call.
+      if (changes.catalogSequence && this.props.catalogSequence) {
+        this.player.catalog.getLazySequence(this.props.catalogSequence, catalogCallback('sequence'), this.props.adConfigId);
+        return;
+      }
+
+      if (changes.videoId && this.props.videoId) {
+        catalogParams = {
+          type: 'video',
+          id: this.props.videoId
+        };
+      } else if (changes.playlistId && this.props.playlistId) {
+        catalogParams = {
+          type: 'playlist',
+          id: this.props.playlistId
+        };
+      } else if (changes.catalogSearch && this.props.catalogSearch) {
+        catalogParams = {
+          type: 'search',
+          q: this.props.catalogSearch
+        };
+      }
     }
 
     if (catalogParams) {
@@ -214,38 +248,19 @@ class ReactPlayerLoader extends React.Component {
         catalogParams.deliveryConfigId = this.props.deliveryConfigId;
       }
 
-      this.player.catalog.get(catalogParams).then((data) => {
+      // We use the callback style here to make tests simpler in IE11 (no need
+      // for a Promise polyfill).
+      this.player.catalog.get(catalogParams, catalogCallback(catalogParams.type));
+    } else if (
+      changes.playlistVideoId &&
+      this.props.playlistVideoId &&
+      this.player.usingPlugin('playlist')
+    ) {
+      const i = findPlaylistItemIndex(this.player.playlist());
 
-        // If the playlistVideoId changed and this is a playlist, we need
-        // to search through the playlist items to find the correct
-        // starting index.
-        if (
-          catalogParams.type === 'playlist' &&
-          changes.playlistVideoId &&
-          this.props.playlistVideoId &&
-          Array.isArray(data)
-        ) {
-          for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-
-            if (
-              item.id === this.props.playlistVideoId ||
-              `ref:${item.referenceId}` === this.props.playlistVideoId
-            ) {
-              data.startingIndex = i;
-              break;
-            }
-          }
-        }
-
-        this.player.catalog.load(data);
-      }, (err) => {
-        /* eslint-disable no-console */
-        if (console && console.error) {
-          console.error(err);
-        }
-        /* eslint-enable no-console */
-      });
+      if (i > -1) {
+        this.player.playlist.currentItem(i);
+      }
     }
   }
 
@@ -275,14 +290,14 @@ class ReactPlayerLoader extends React.Component {
       const current = this.props[key];
 
       if (current !== previous) {
-        acc[key] = previous;
+        acc[key] = true;
       }
 
       return acc;
     }, {});
 
     // If any changed keys cannot be handled without a reload, perform a reload.
-    if (Object.keys(changes).some(k => NO_RELOAD_PROPS.indexOf(k) === -1)) {
+    if (Object.keys(changes).some(k => UPDATEABLE_PROPS.indexOf(k) === -1)) {
       this.loadPlayer();
       return;
     }

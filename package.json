@@ -68,9 +68,10 @@
     "test/"
   ],
   "dependencies": {
-    "@brightcove/player-loader": "^1.7.0"
+    "@brightcove/player-loader": "^1.7.1"
   },
   "devDependencies": {
+    "@testing-library/react": "^8.0.1",
     "conventional-changelog-cli": "^2.0.21",
     "conventional-changelog-videojs": "^3.0.0",
     "doctoc": "^1.4.0",
@@ -85,8 +86,9 @@
     "pkg-ok": "^2.3.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "rollup": "^0.67.4",
+    "rollup": "^1.16.2",
     "shx": "^0.3.2",
+    "sinon": "^7.3.2",
     "videojs-generate-karma-config": "^5.3.0",
     "videojs-generate-rollup-config": "^3.2.0",
     "videojs-generator-verify": "~1.2.0",

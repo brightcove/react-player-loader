@@ -8,6 +8,7 @@ module.exports = function(config) {
     files(defaults) {
       // defaults don't work for this project
       return [
+        'node_modules/sinon/pkg/sinon.js',
         'node_modules/react/umd/react.development.js',
         'node_modules/react-dom/umd/react-dom.development.js',
         'test/dist/bundle.js'

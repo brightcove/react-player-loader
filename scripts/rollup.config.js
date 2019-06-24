@@ -27,6 +27,7 @@ const options = {
       }),
       module: defaults.module,
       test: Object.assign(defaults.test, {
+        '@sheerun/mutationobserver-shim': 'MutationObserver',
         'react': 'React',
         'react-dom': 'ReactDOM'
       })
