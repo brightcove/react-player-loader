@@ -3,7 +3,7 @@ import playerLoader from '@brightcove/player-loader';
 
 /**
  * These prop changes can be handled by an internal player state change rather
- * than a full reload.
+ * than a full dispose/recreate.
  *
  * @private
  * @type {Object}
@@ -86,7 +86,7 @@ class ReactPlayerLoader extends React.Component {
         // Null out the player reference when the player is disposed from
         // outside the component.
         if (type === 'in-page') {
-          ref.on('dispose', () => {
+          ref.one('dispose', () => {
             this.player = null;
           });
         }
@@ -161,57 +161,82 @@ class ReactPlayerLoader extends React.Component {
   }
 
   /**
+   * Find the index of the `playlistVideoId` prop within the player's playlist.
+   *
+   * @param  {Object[]} playlist
+   *         An array of playlist item objects.
+   *
+   * @return {number}
+   *         The index of the `playlistVideoId` or `-1` if the player has been
+   *         disposed, is not using the playlist plugin, or if not found.
+   */
+  findPlaylistVideoIdIndex_(playlist) {
+    const {playlistVideoId} = this.props;
+
+    if (Array.isArray(playlist) && playlistVideoId) {
+      for (let i = 0; i < playlist.length; i++) {
+        const {id, referenceId} = playlist[i];
+
+        if (id === playlistVideoId || `ref:${referenceId}` === playlistVideoId) {
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  /**
+   * Create a Playback API callback function for the component's player.
+   *
+   * @private
+   * @param  {string} requestType
+   *         The Playback API request type (e.g. "video" or "playlist").
+   *
+   * @param  {Object} changes
+   *         An object. The keys of this object are the props that changed.
+   *
+   * @return {Function}
+   *         A callback for the Playback API request.
+   */
+  createPlaybackAPICallback_(requestType, changes) {
+    return (err, data) => {
+      if (err) {
+        logError(err);
+        return;
+      }
+
+      // If the playlistVideoId changed and this is a playlist request, we
+      // need to search through the playlist items to find the correct
+      // starting index.
+      if (requestType === 'playlist' && changes.playlistVideoId) {
+        const i = this.findPlaylistVideoIdIndex_(data);
+
+        if (i > -1) {
+          data.startingIndex = i;
+        }
+      }
+
+      this.player.catalog.load(data);
+    };
+  }
+
+  /**
    * Update the player based on changes to certain props that do not require
-   * a full player reload.
+   * a full player dispose/recreate.
    *
    * @param {Object} changes
    *        An object. The keys of this object are the props that changed.
    */
   updatePlayer(changes) {
 
-    // No player exists or player is disposed.
+    // No player exists, player is disposed, or not using the catalog
     if (!this.player || !this.player.el()) {
       return;
     }
 
-    const findPlaylistItemIndex = (items) => {
-      if (Array.isArray(items) && this.props.playlistVideoId) {
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i];
-
-          if (
-            item.id === this.props.playlistVideoId ||
-            `ref:${item.referenceId}` === this.props.playlistVideoId
-          ) {
-            return i;
-          }
-        }
-      }
-      return -1;
-    };
-
-    const catalogCallback = (requestType) => {
-      return (err, data) => {
-        if (err) {
-          logError(err);
-          return;
-        }
-
-        // If the playlistVideoId changed and this is a playlist request, we
-        // need to search through the playlist items to find the correct
-        // starting index.
-        if (requestType === 'playlist' && changes.playlistVideoId) {
-          const i = findPlaylistItemIndex(data);
-
-          if (i > -1) {
-            data.startingIndex = i;
-          }
-        }
-
-        this.player.catalog.load(data);
-      };
-    };
-
+    // If the player is using the catalog plugin, we _may_ populate this
+    // variable with an object.
     let catalogParams;
 
     if (this.player.usingPlugin('catalog')) {
@@ -219,7 +244,9 @@ class ReactPlayerLoader extends React.Component {
       // There is a new catalog sequence request. This takes precedence over
       // other catalog updates because it is a different call.
       if (changes.catalogSequence && this.props.catalogSequence) {
-        this.player.catalog.getLazySequence(this.props.catalogSequence, catalogCallback('sequence'), this.props.adConfigId);
+        const callback = this.createPlaybackAPICallback_('sequence', changes);
+
+        this.player.catalog.getLazySequence(this.props.catalogSequence, callback, this.props.adConfigId);
         return;
       }
 
@@ -241,6 +268,8 @@ class ReactPlayerLoader extends React.Component {
       }
     }
 
+    // If `catalogParams` is `undefined` here, that means the player either
+    // does not have the catalog plugin or no valid catalog request can be made.
     if (catalogParams) {
       if (this.props.adConfigId) {
         catalogParams.adConfigId = this.props.adConfigId;
@@ -252,13 +281,18 @@ class ReactPlayerLoader extends React.Component {
 
       // We use the callback style here to make tests simpler in IE11 (no need
       // for a Promise polyfill).
-      this.player.catalog.get(catalogParams, catalogCallback(catalogParams.type));
+      const callback = this.createPlaybackAPICallback_(catalogParams.type, changes);
+
+      this.player.catalog.get(catalogParams, callback);
+
+    // If no catalog request is being made, we may still need to update the
+    // playlist selected video.
     } else if (
       changes.playlistVideoId &&
       this.props.playlistVideoId &&
       this.player.usingPlugin('playlist')
     ) {
-      const i = findPlaylistItemIndex(this.player.playlist());
+      const i = this.findPlaylistVideoIdIndex_(this.player.playlist());
 
       if (i > -1) {
         this.player.playlist.currentItem(i);
@@ -279,7 +313,7 @@ class ReactPlayerLoader extends React.Component {
    *
    * Some prop changes may trigger special behavior (see `propChangeHandlers`),
    * but if ANY prop is changed that is NOT handled, the player will be
-   * reloaded entirely.
+   * disposed/recreated entirely.
    *
    * @param  {Object} prevProps
    *         The previous props state before change.
@@ -298,7 +332,7 @@ class ReactPlayerLoader extends React.Component {
       return acc;
     }, {});
 
-    // If any changed keys cannot be handled without a reload, perform a reload.
+    // Dispose and recreate the player if any changed keys cannot be handled.
     if (Object.keys(changes).some(k => UPDATEABLE_PROPS.indexOf(k) === -1)) {
       this.loadPlayer();
       return;
