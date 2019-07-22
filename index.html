@@ -4,29 +4,49 @@
   <meta charset="utf-8">
 </head>
 <body>
+  <p>Nothing will appear below because this page uses an invalid account ID by default.</p>
+  <p>Open the console and use <code>window.customApp.setState({})</code> to try changing props.</p>
   <div id="fixture"></div>
   <script src="node_modules/react/umd/react.development.js"></script>
   <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
+  <script src="node_modules/create-react-class/create-react-class.js"></script>
   <script src="dist/brightcove-react-player-loader.js"></script>
   <script>
     (function() {
+      var fixture = document.getElementById('fixture');
       var React = window.React;
       var ReactDOM = window.ReactDOM;
-      var ReactPlayerLoader = window.BrightcoveReactPlayerLoader;
+      var MyCustomApp = window.createReactClass({
+        getInitialState: function() {
+          return {
 
-      var reactPlayerLoader = window.reactPlayerLoader = ReactDOM.render(
-        React.createElement(ReactPlayerLoader, {
-          accountId: '1',
-          baseUrl: window.location.origin + '/vendor/',
-          onSuccess: function(success) {
-            // two ways to get the underlying player/iframe at this point.
-            console.log(success.ref)
-            console.log(reactPlayerLoader.player);
-          }
-        }),
-        document.getElementById('fixture')
-      );
+            // Put your account ID, player ID, or other settings here...
+            accountId: 1,
+            videoId: 2
+          };
+        },
+        render: function() {
+          return React.createElement(window.BrightcoveReactPlayerLoader, {
+            accountId: this.state.accountId,
+            videoId: this.state.videoId,
+            onSuccess: function(player) {
+              if (console) {
+                console.log('successfully created player', player);
+              }
+            },
+            onFailure: function(err) {
+              if (console) {
+                console.log('failed to create player', err);
+              }
+            },
+            key: this.state
+          });
+        }
+      });
+
+      window.customApp = ReactDOM.render(React.createElement(MyCustomApp), fixture);
     })();
+
   </script>
 </body>
 </html>

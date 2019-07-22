@@ -27,6 +27,10 @@ const options = {
       }),
       module: defaults.module,
       test: Object.assign(defaults.test, {
+
+        // This is a deep dependency of @testing-library/react that doesn't
+        // play nice with Rollup...
+        '@sheerun/mutationobserver-shim': 'MutationObserver',
         'react': 'React',
         'react-dom': 'ReactDOM'
       })
