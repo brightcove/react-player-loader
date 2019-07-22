@@ -4,28 +4,49 @@
   <meta charset="utf-8">
 </head>
 <body>
+  <p>Nothing will appear below because this page uses an invalid account ID by default.</p>
+  <p>Open the console and use <code>window.customApp.setState({})</code> to try changing props.</p>
   <div id="fixture"></div>
   <script src="node_modules/react/umd/react.development.js"></script>
   <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
+  <script src="node_modules/create-react-class/create-react-class.js"></script>
   <script src="dist/brightcove-react-player-loader.js"></script>
   <script>
     (function() {
+      var fixture = document.getElementById('fixture');
       var React = window.React;
       var ReactDOM = window.ReactDOM;
+      var MyCustomApp = window.createReactClass({
+        getInitialState: function() {
+          return {
 
-      window.reactPlayerLoader = ReactDOM.render(
-        React.createElement(window.BrightcoveReactPlayerLoader, {
-          accountId: '1',
-          videoId: '2',
-          baseUrl: window.location.origin + '/vendor/'
-        }),
-        document.getElementById('fixture')
-      );
+            // Put your account ID, player ID, or other settings here...
+            accountId: 1,
+            videoId: 2
+          };
+        },
+        render: function() {
+          return React.createElement(window.BrightcoveReactPlayerLoader, {
+            accountId: this.state.accountId,
+            videoId: this.state.videoId,
+            onSuccess: function(player) {
+              if (console) {
+                console.log('successfully created player', player);
+              }
+            },
+            onFailure: function(err) {
+              if (console) {
+                console.log('failed to create player', err);
+              }
+            },
+            key: this.state
+          });
+        }
+      });
 
-      if (console) {
-        console.log('the component instance is available as window.reactPlayerLoader');
-      }
+      window.customApp = ReactDOM.render(React.createElement(MyCustomApp), fixture);
     })();
+
   </script>
 </body>
 </html>
