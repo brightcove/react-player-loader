@@ -71,7 +71,7 @@
     "@brightcove/player-loader": "^1.7.1"
   },
   "devDependencies": {
-    "@testing-library/react": "^8.0.1",
+    "@testing-library/react": "^9.3.2",
     "conventional-changelog-cli": "^2.0.21",
     "conventional-changelog-videojs": "^3.0.0",
     "create-react-class": "^15.6.3",
