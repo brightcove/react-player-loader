@@ -87,7 +87,7 @@
     "pkg-ok": "^2.3.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "rollup": "^1.16.2",
+    "rollup": "^1.27.14",
     "shx": "^0.3.2",
     "sinon": "^7.3.2",
     "videojs-generate-karma-config": "^5.3.0",
