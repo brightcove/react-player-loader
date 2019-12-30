@@ -89,7 +89,7 @@
     "react-dom": "^16.8.6",
     "rollup": "^1.16.2",
     "shx": "^0.3.2",
-    "sinon": "^7.3.2",
+    "sinon": "^8.0.2",
     "videojs-generate-karma-config": "^5.3.0",
     "videojs-generate-rollup-config": "^3.2.0",
     "videojs-generator-verify": "~1.2.0",
