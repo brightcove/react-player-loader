@@ -336,7 +336,7 @@ class ReactPlayerLoader extends React.Component {
         return acc;
       }
 
-      if (typeof current === 'object') {
+      if (typeof current === 'object' && current !== null) {
         if (JSON.stringify(current) !== JSON.stringify(previous)) {
           acc[key] = true;
         }

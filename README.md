@@ -128,7 +128,7 @@ The following props will update the player's state _without_ a reload:
 - `playlistVideoId`
 - `videoId`
 
-All other prop changes, excluding props that `function`'s, will cause a complete dispose/reload.
+All other prop changes, excluding props that are `function`'s, will cause a complete dispose/reload.
 
 ## View the Demo
 
