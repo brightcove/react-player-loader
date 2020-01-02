@@ -45,6 +45,10 @@ class ReactPlayerLoader extends React.Component {
    * @param {Object} [props.attrs]
    *        Used to set attributes on the component element that contains the
    *        embedded Brightcove Player.
+   *
+   * @param {boolean} [props.manualReloadFromPropChanges]
+   *        Used to specify if reloading the player after prop changes will be handled manually.
+   *
    */
   constructor(props) {
     super(props);
@@ -52,6 +56,7 @@ class ReactPlayerLoader extends React.Component {
     this.setRefNode = ref => {
       this.refNode = ref;
     };
+    this.loadPlayer = this.loadPlayer.bind(this);
   }
 
   /**
@@ -123,6 +128,7 @@ class ReactPlayerLoader extends React.Component {
     // Delete props that are not meant to be passed to player-loader.
     delete options.attrs;
     delete options.baseUrl;
+    delete options.manualReloadFromPropChanges;
 
     // If a base URL is provided, it should only apply to this player load.
     // This means we need to back up the original base URL and restore it
@@ -325,6 +331,19 @@ class ReactPlayerLoader extends React.Component {
       const previous = prevProps[key];
       const current = this.props[key];
 
+      // Do not compare functions
+      if (typeof current === 'function') {
+        return acc;
+      }
+
+      if (typeof current === 'object') {
+        if (JSON.stringify(current) !== JSON.stringify(previous)) {
+          acc[key] = true;
+        }
+
+        return acc;
+      }
+
       if (current !== previous) {
         acc[key] = true;
       }
@@ -332,10 +351,12 @@ class ReactPlayerLoader extends React.Component {
       return acc;
     }, {});
 
-    // Dispose and recreate the player if any changed keys cannot be handled.
-    if (Object.keys(changes).some(k => UPDATEABLE_PROPS.indexOf(k) === -1)) {
-      this.loadPlayer();
-      return;
+    if (!this.props.manualReloadFromPropChanges) {
+      // Dispose and recreate the player if any changed keys cannot be handled.
+      if (Object.keys(changes).some(k => UPDATEABLE_PROPS.indexOf(k) === -1)) {
+        this.loadPlayer();
+        return;
+      }
     }
 
     this.updatePlayer(changes);
