@@ -623,4 +623,66 @@ QUnit.module('ReactPlayerLoader', {
 
     rerender = render(React.createElement(ReactPlayerLoader, props)).rerender;
   });
+
+  QUnit.test('loadPlayer() method reloads player', function(assert) {
+    const done = assert.async(2);
+
+    const props = {
+      accountId: '1',
+      applicationId: 'foo',
+      onSuccess: ({ref, type}) => {
+        assert.ok(true, 'the success callback was called');
+        done();
+      }
+    };
+
+    const reactPlayerLoader = ReactDOM.render(
+      React.createElement(ReactPlayerLoader, props),
+      this.fixture
+    );
+
+    reactPlayerLoader.loadPlayer();
+  });
+
+  QUnit.test('set manualReloadFromPropChanges to true', function(assert) {
+    const done = assert.async(2);
+    let rerender;
+    const props = {
+      accountId: '1',
+      applicationId: 'foo',
+      manualReloadFromPropChanges: true,
+      onSuccess: ({ref, type}) => {
+        if (props.applicationId !== 'bar') {
+          props.applicationId = 'bar';
+          done();
+        }
+        rerender(React.createElement(ReactPlayerLoader, props));
+        assert.ok(true, 'the success callback was called');
+        done();
+      }
+    };
+
+    rerender = render(React.createElement(ReactPlayerLoader, props)).rerender;
+  });
+
+  QUnit.test('set manualReloadFromPropChanges to false', function(assert) {
+    const done = assert.async(3);
+    let rerender;
+    const props = {
+      accountId: '1',
+      applicationId: 'foo',
+      manualReloadFromPropChanges: false,
+      onSuccess: ({ref, type}) => {
+        if (props.applicationId !== 'bar') {
+          props.applicationId = 'bar';
+          done();
+        }
+        rerender(React.createElement(ReactPlayerLoader, props));
+        assert.ok(true, 'the success callback was called');
+        done();
+      }
+    };
+
+    rerender = render(React.createElement(ReactPlayerLoader, props)).rerender;
+  });
 });

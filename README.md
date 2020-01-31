@@ -22,6 +22,7 @@ This library has [the same support characteristics as the Brightcove Player Load
 - [Props](#props)
   - [`attrs`](#attrs)
   - [`baseUrl`](#baseurl)
+  - [`manualReloadFromPropChanges`](#manualreloadfrompropchanges)
   - [Other Props](#other-props)
 - [Effects of Prop Changes](#effects-of-prop-changes)
 - [View the Demo](#view-the-demo)
@@ -96,6 +97,14 @@ Used to override the base URL for the Brightcove Player being embedded.
 
 Most users will never need this prop. By default, players are loaded from Brightcove's player CDN (`players.brightcove.net`).
 
+### `manualReloadFromPropChanges`
+
+Type: `boolean`
+
+Used to specify if reloading the player after prop changes will be handled manually. This can be done by calling `refToReactPlayerLoader.loadPlayer()`.
+
+See [Effects of Prop Changes](#effects-of-prop-changes) below for the effects of prop changes.
+
 ### Other Props
 
 All props not specified above are passed to the [Brightcove Player Loader](https://github.com/brightcove/player-loader#parameters) with a few differences:
@@ -119,7 +128,7 @@ The following props will update the player's state _without_ a reload:
 - `playlistVideoId`
 - `videoId`
 
-All other prop changes will cause a complete dispose/reload.
+All other prop changes, excluding props that are `function`'s, will cause a complete dispose/reload.
 
 ## View the Demo
 
