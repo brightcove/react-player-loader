@@ -1,3 +1,10 @@
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/brightcove/react-player-loader/compare/v1.3.0...v1.4.0) (2020-01-31)
+
+### Features
+
+* add support for manualReloadFromPropChanges prop ([#67](https://github.com/brightcove/react-player-loader/issues/67)) ([756af85](https://github.com/brightcove/react-player-loader/commit/756af85))
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/brightcove/react-player-loader/compare/v1.2.1...v1.3.0) (2019-07-22)
 
