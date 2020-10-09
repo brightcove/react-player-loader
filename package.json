@@ -68,7 +68,7 @@
     "test/"
   ],
   "dependencies": {
-    "@brightcove/player-loader": "^1.7.1"
+    "@brightcove/player-loader": "^1.8.0"
   },
   "devDependencies": {
     "@testing-library/react": "^8.0.1",
