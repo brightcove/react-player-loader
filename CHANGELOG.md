@@ -1,3 +1,10 @@
+<a name="1.4.1"></a>
+## [1.4.1](https://github.com/brightcove/react-player-loader/compare/v1.4.0...v1.4.1) (2020-10-09)
+
+### Chores
+
+* **package:** Update [@brightcove](https://github.com/brightcove)/player-loader to 1.8.0 ([48c180b](https://github.com/brightcove/react-player-loader/commit/48c180b))
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/brightcove/react-player-loader/compare/v1.3.0...v1.4.0) (2020-01-31)
 
