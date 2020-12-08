@@ -72,6 +72,7 @@ class ReactPlayerLoader extends React.Component {
     // user-provided callbacks for use later.
     const userSuccess = this.props.onSuccess;
     const userFailure = this.props.onFailure;
+    const userOnEmbedCreated = this.props.onEmbedCreated;
 
     const options = Object.assign({}, this.props, {
       refNode: this.refNode,
@@ -122,6 +123,12 @@ class ReactPlayerLoader extends React.Component {
 
         // Fall back to throwing an error;
         throw new Error(error);
+      },
+      onEmbedCreated: (element) => {
+
+        if (typeof userOnEmbedCreated === 'function') {
+          userOnEmbedCreated(element);
+        }
       }
     });
 
