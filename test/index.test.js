@@ -109,6 +109,27 @@ QUnit.module('ReactPlayerLoader', {
     assert.ok(this.fixture.querySelector('div[foo="bar"]'), 'foo="bar" div exists');
   });
 
+  QUnit.test('can set attributes on the embed element', function(assert) {
+    const done = assert.async();
+
+    assert.expect(1);
+
+    ReactDOM.render(
+      React.createElement(ReactPlayerLoader, {
+        accountId: '1',
+        onSuccess: ({ref, type}) => {
+          window.setTimeout(done, 1);
+        },
+        onEmbedCreated: (element) => {
+          element.setAttribute('data-attribute', '1');
+        }
+      }),
+      this.fixture
+    );
+
+    assert.ok(this.fixture.querySelector('video-js[data-attribute="1"]'), 'found data attribute');
+  });
+
   QUnit.test('className defaults to "brightcove-react-player-loader"', function(assert) {
     const done = assert.async();
 
