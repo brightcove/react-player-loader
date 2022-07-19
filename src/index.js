@@ -237,7 +237,7 @@ class ReactPlayerLoader extends React.Component {
   updatePlayer(changes) {
 
     // No player exists, player is disposed, or not using the catalog
-    if (!this.player || !this.player.el()) {
+    if (!this.player || !this.player.el || !this.player.el()) {
       return;
     }
 
