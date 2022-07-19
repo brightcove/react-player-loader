@@ -1,3 +1,14 @@
+<a name="1.4.2"></a>
+## [1.4.2](https://github.com/brightcove/react-player-loader/compare/v1.4.1...v1.4.2) (2022-07-19)
+
+### Bug Fixes
+
+* Fix an issue where the updatePlayer method would throw when using iframe embeds ([#96](https://github.com/brightcove/react-player-loader/issues/96)) ([a184999](https://github.com/brightcove/react-player-loader/commit/a184999))
+
+### Chores
+
+* update jsdoc ([#95](https://github.com/brightcove/react-player-loader/issues/95)) ([2424025](https://github.com/brightcove/react-player-loader/commit/2424025))
+
 <a name="1.4.1"></a>
 ## [1.4.1](https://github.com/brightcove/react-player-loader/compare/v1.4.0...v1.4.1) (2020-10-09)
 
