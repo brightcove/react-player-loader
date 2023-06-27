@@ -641,7 +641,10 @@ QUnit.module('ReactPlayerLoader', {
       this.fixture
     );
 
-    reactPlayerLoader.loadPlayer();
+    // Add a delay, otherwise this is emulating the strict mode problem
+    window.setTimeout(function() {
+      reactPlayerLoader.loadPlayer();
+    }, 1000);
   });
 
   QUnit.test('set manualReloadFromPropChanges to true', function(assert) {
@@ -684,5 +687,61 @@ QUnit.module('ReactPlayerLoader', {
     };
 
     rerender = render(React.createElement(ReactPlayerLoader, props)).rerender;
+  });
+
+  QUnit.module('strict mode');
+
+  QUnit.test('player not created twice in strict mode', function(assert) {
+    const done = assert.async();
+
+    assert.expect(1);
+
+    // createRoot needed for React 18
+    const root = ReactDOM.createRoot(this.fixture);
+
+    root.render(React.createElement(
+      React.StrictMode,
+      {},
+      React.createElement(ReactPlayerLoader, {
+        accountId: '1',
+        onSuccess: ({ref, type}) => {
+          assert.ok(ref, 'downloaded and created a player');
+        }
+      })
+    ));
+
+    window.setTimeout(function() {
+      root.unmount();
+      done();
+    }, 1000);
+
+  });
+
+  QUnit.test('aborted player load logs message', function(assert) {
+    const done = assert.async();
+    const spy = sinon.spy(window.console, 'log');
+
+    assert.expect(1);
+
+    // createRoot needed for React 18
+    const root = ReactDOM.createRoot(this.fixture);
+
+    root.render(React.createElement(
+      React.StrictMode,
+      {},
+      React.createElement(ReactPlayerLoader, {
+        accountId: '1'
+      })
+    ));
+
+    window.setTimeout(function() {
+      assert.ok(
+        spy.calledWith('Brightcove React Player Loader aborted a subsequent player load while a load was pending'),
+        'warning logged'
+      );
+      root.unmount();
+      spy.restore();
+      done();
+    }, 1000);
   });
 });
