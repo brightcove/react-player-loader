@@ -63,6 +63,15 @@ class ReactPlayerLoader extends React.Component {
    * Loads a new player based on the current props.
    */
   loadPlayer() {
+    // Guard against loading the player twice, which would be caused by React's
+    // strict mode unmounting and immediately re-mounting the component
+    if (!this.loading_) {
+      this.loading_ = true;
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('Brightcove React Player Loader aborted a subsequent player load while a load was pending');
+      return;
+    }
 
     // If there is any player currently loaded, dispose it before fetching a
     // new one.
@@ -77,6 +86,9 @@ class ReactPlayerLoader extends React.Component {
       refNode: this.refNode,
       refNodeInsert: 'append',
       onSuccess: ({ref, type}) => {
+        // The player load process has completed. A subsequent load,
+        // e.g. because of a props change, should be allowed
+        this.loading_ = false;
 
         // If the component is not mounted when the callback fires, dispose
         // the player and bail out.
@@ -108,6 +120,9 @@ class ReactPlayerLoader extends React.Component {
         }
       },
       onFailure: (error) => {
+        // The player load process has completed. A subsequent load,
+        // e.g. because of a props change, should be allowed
+        this.loading_ = false;
 
         // Ignore errors when not mounted.
         if (!this.isMounted_) {
