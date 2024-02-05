@@ -1,3 +1,14 @@
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/brightcove/react-player-loader/compare/v1.4.2...v1.5.0) (2024-02-05)
+
+### Features
+
+* support strict mode ([#114](https://github.com/brightcove/react-player-loader/issues/114)) ([846d7a1](https://github.com/brightcove/react-player-loader/commit/846d7a1))
+
+### Bug Fixes
+
+* disable firefox from running in karma ([#121](https://github.com/brightcove/react-player-loader/issues/121)) ([ea097d0](https://github.com/brightcove/react-player-loader/commit/ea097d0))
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/brightcove/react-player-loader/compare/v1.4.1...v1.4.2) (2022-07-19)
 
