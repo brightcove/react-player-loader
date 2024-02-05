@@ -5,6 +5,9 @@ module.exports = function(config) {
   // see https://github.com/videojs/videojs-generate-karma-config
   // for options
   const options = {
+    browsers(aboutToRun) {
+      return aboutToRun.filter(launcherName => launcherName !== 'FirefoxHeadless');
+    },
     files(defaults) {
       // defaults don't work for this project
       return [
